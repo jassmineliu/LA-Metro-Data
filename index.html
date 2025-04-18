@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="./resources/ol.css">
+        <link rel="stylesheet" href="resources/fontawesome-all.min.css">
+        <link rel="stylesheet" href="./resources/ol-layerswitcher.css">
+        <link rel="stylesheet" href="./resources/qgis2web.css">
+        <style>
+        html, body {
+            background-color: #ffffff;
+        }
+        .ol-control > * {
+            background-color: #f8f8f8!important;
+            color: #444444!important;
+            border-radius: 0px;
+        }
+        .ol-attribution a, .gcd-gl-input::placeholder, .search-layer-input-search::placeholder {
+            color: #444444!important;
+        }
+        .search-layer-input-search {
+            background-color: #f8f8f8!important;
+        }
+        .ol-control > *:focus, .ol-control >*:hover {
+            background-color: rgba(248, 248, 248, 0.7)!important;
+        } 
+        .ol-control {
+            background-color: rgba(255,255,255,.4) !important;
+            padding: 2px !important;
+        } 
+        .scroll-control {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap:10px;
+        }
+        </style>
+
+        <style>
+        #map {
+            width: 90%;
+            height: 85%;
+            padding: 0;
+            margin: 0;
+            border: 3px solid #ccc;
+        }
+        
+        body {
+            display:flex;
+            flex-direction:column;
+            justify-content: center;
+            align-items: center;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <h1>LA Rail Data </h1>
+        <div id="map">
+            <div id="popup" class="ol-popup">
+                <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                <div id="popup-content"></div>
+            </div>
+        </div>
+        <div class="scroll-control">
+            <button class="scroll-button" id="scrollUp">↑</button>
+            <h2 id="year-display"></h2>
+            <button class="scroll-button" id="scrollDown">↓</button>
+        </div>
+        <script src="resources/qgis2web_expressions.js"></script>
+        <script src="./resources/functions.js"></script>
+        <script src="./resources/ol.js"></script>
+        <script src="./resources/ol-layerswitcher.js"></script>
+        <script src="layers/Median_Income_and_AMI_census_tract_0.js"></script><script src="layers/2024BusData_1.js"></script><script src="layers/2024RailData_2.js"></script><script src="layers/2023BusData_3.js"></script><script src="layers/2023RailData_4.js"></script><script src="layers/2022BusData_5.js"></script><script src="layers/2022RailData_6.js"></script><script src="layers/2021BusLines_7.js"></script><script src="layers/2020BusData_8.js"></script><script src="layers/2019BusData_9.js"></script><script src="layers/2018BusData_10.js"></script><script src="layers/20182021RailData_11.js"></script>
+        <script src="styles/Median_Income_and_AMI_census_tract_0_style.js"></script><script src="styles/2024BusData_1_style.js"></script><script src="styles/2024RailData_2_style.js"></script><script src="styles/2023BusData_3_style.js"></script><script src="styles/2023RailData_4_style.js"></script><script src="styles/2022BusData_5_style.js"></script><script src="styles/2022RailData_6_style.js"></script><script src="styles/2021BusLines_7_style.js"></script><script src="styles/2020BusData_8_style.js"></script><script src="styles/2019BusData_9_style.js"></script><script src="styles/2018BusData_10_style.js"></script><script src="styles/20182021RailData_11_style.js"></script>
+        <script src="./layers/layers.js" type="text/javascript"></script> 
+        <script src="./resources/Autolinker.min.js"></script>
+        <script src="./resources/qgis2web.js"></script>
+        <script>
+            function checkDisableButtons() {
+                if (window.yearControl.getCurrentYear() === 2018) {
+                    document.getElementById('scrollUp').disabled = true;
+                } else if (window.yearControl.getCurrentYear() === 2024) {
+                    document.getElementById('scrollDown').disabled = true;
+                }
+                else {
+                    document.getElementById('scrollUp').disabled = false;
+                    document.getElementById('scrollDown').disabled = false;
+                }
+            }
+
+            window.addEventListener('load', function() {
+                window.yearControl.updateLayerVisibility();
+                document.getElementById('year-display').innerText = window.yearControl.getCurrentYear();
+                checkDisableButtons();
+            });
+
+
+            document.getElementById('scrollUp').addEventListener('click', () => {
+                window.yearControl.updateLayerVisibility('up');
+                document.getElementById('year-display').innerText = window.yearControl.getCurrentYear();
+                checkDisableButtons();
+
+                console.log('up')
+            });
+
+            document.getElementById('scrollDown').addEventListener('click', () => {
+                window.yearControl.updateLayerVisibility('down');
+                document.getElementById('year-display').innerText = window.yearControl.getCurrentYear();
+                checkDisableButtons();
+
+                console.log('down')
+            });
+            
+           
+    
+        </script>
+    </body>
+</html>
