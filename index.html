@@ -43,35 +43,127 @@
 
         <style>
         #map {
-            width: 90%;
+            width: 70%;
             height: 85%;
             padding: 0;
             margin: 0;
             border: 3px solid #ccc;
         }
-        
-        body {
+        body{
             display:flex;
-            flex-direction:column;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            padding-top:2vh;
+
+        }
+        #main-container {
+            display:flex;
+            flex-direction: row;
+            height:90vh;
+            width:90vw;
+            gap:2vw;
+        }
+        #controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            
+            width: 30%;
+        }
+        h3{
+            margin:4px;
+            padding:0px;
+        }
+        #main-title{
+            margin:4px;
+            padding: 0px;
+        }
+        #key-section {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin:10px 0px;
+        }
+        #median-income-key {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width:50%;
+        }
+        #bus-key-section {
+            width:50%;
+        }
+        .bus-key {
+            display: flex;
+            flex-direction: row;  
+            align-items: center;
+            gap:5px;       
+            margin:0px;   
+        }
+        .bus-key h4 {
+            margin:4px;
+            padding:0px;
+        }
+        .bus-key input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            cursor: pointer;
         }
         </style>
         <title></title>
     </head>
     <body>
         <h1>LA Rail Data </h1>
-        <div id="map">
-            <div id="popup" class="ol-popup">
-                <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-                <div id="popup-content"></div>
+        <div id="main-container">
+            <div id="map">
+                <div id="popup" class="ol-popup">
+                    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                    <div id="popup-content"></div>
+                </div>
             </div>
+
+            <div id="controls">
+                <h2 id="main-title">Map Information</h2>
+                <p>This map displays information on LA transit throughout the years. With these, we are attempting to track how LA transit has evolved over the years, which neighborhoods transit is covering, and how LA's policies correlate to their mission to lower the city's environmental footprint. </p>
+                <p>Click through the years to see how transit has changed and turn on and off layers for clarity</p>
+                <h2 id="main-title">Key</h2>
+
+                <div id="key-section">
+                    <div id="median-income-key">
+                        <h4 style="margin:2px">Median Income in LA Neighborhoods</h4>
+                        <img src="styles/MedianIncomeKey.png" alt="Image showing what the varying hues of blue on the map mean reagrding median income" style="width: 100%; height:auto; border:#444444">
+                    </div>
+                    <div id="bus-key-section">
+                        <div class="bus-key">
+                            <input type="checkbox" id="busToggle" checked>
+                            <img src="styles/legend/2018BusData_10.png" alt="Green line showing LA Metro Bus Lines on the map" style="width: 10%; height:10px; border:#444444">
+                            <h4>LA Metro Bus Lines</h4>
+                        </div>
+                        <div class="bus-key">
+                            <input type="checkbox" id="railToggle" checked>
+                            <img src="styles/legend/20182021RailData_11.png" alt="Pink line showing LA Metro Rail Lines on the map" style="width: 10%; height:10px; border:#444444">
+                            <h4>LA Metro Rail Lines</h4>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <h3>Year Displayed:</h3>
+                <div class="scroll-control">
+                    <button class="scroll-button" id="scrollUp">↑</button>
+                    <h3 id="year-display"></h3>
+                    <button class="scroll-button" id="scrollDown">↓</button>
+                </div>
+            </div>
+        
         </div>
-        <div class="scroll-control">
-            <button class="scroll-button" id="scrollUp">↑</button>
-            <h2 id="year-display"></h2>
-            <button class="scroll-button" id="scrollDown">↓</button>
-        </div>
+            
+        
         <script src="resources/qgis2web_expressions.js"></script>
         <script src="./resources/functions.js"></script>
         <script src="./resources/ol.js"></script>
@@ -95,7 +187,7 @@
             }
 
             window.addEventListener('load', function() {
-                window.yearControl.updateLayerVisibility();
+                window.yearControl.updateLayerVisibility('start');
                 document.getElementById('year-display').innerText = window.yearControl.getCurrentYear();
                 checkDisableButtons();
             });
@@ -105,19 +197,22 @@
                 window.yearControl.updateLayerVisibility('up');
                 document.getElementById('year-display').innerText = window.yearControl.getCurrentYear();
                 checkDisableButtons();
-
-                console.log('up')
             });
 
             document.getElementById('scrollDown').addEventListener('click', () => {
                 window.yearControl.updateLayerVisibility('down');
                 document.getElementById('year-display').innerText = window.yearControl.getCurrentYear();
                 checkDisableButtons();
-
-                console.log('down')
             });
             
-           
+            document.getElementById('busToggle').addEventListener('change', () => {
+                window.yearControl.updateLayerVisibility();
+            });
+            
+            document.getElementById('railToggle').addEventListener('change', () => {
+                window.yearControl.updateLayerVisibility();
+            });
+            
     
         </script>
     </body>

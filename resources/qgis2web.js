@@ -10,7 +10,6 @@ var map = new ol.Map({
 
 //initial view - epsg:3857 coordinates if not "Match project CRS"
 map.getView().fit([-13204608.088229, 3985909.761519, -13116659.883542, 4055624.773325], map.getSize());
-
 ////small screen definition
     var hasTouchScreen = map.getViewport().classList.contains('ol-touch');
     var isSmallScreen = window.innerWidth < 650;
@@ -559,17 +558,26 @@ document.addEventListener('DOMContentLoaded', function() {
         currentYearIndex: 0,
         
         updateLayerVisibility: function(direction) {
+
+        map.getView().animate({
+            center:[-13160633.9858855, 4020767.267422],
+            zoom:  map.getSize(),
+            duration: 1000,
+        })
+
         if (direction === 'up') {
             this.currentYearIndex = Math.max(0, this.currentYearIndex - 1);
         } else if(direction === 'down') {
             this.currentYearIndex = Math.min(this.years.length - 1, this.currentYearIndex + 1);
-        } else {
+        } else if(direction === 'start'){
             this.currentYearIndex = 0;
+        }
+        else {
+            this.currentYearIndex = this.currentYearIndex
         }
         
         const currentYear = this.years[this.currentYearIndex];
-        
-        // Hide all layers except base layer
+            // Hide all layers except base layer
         map.getLayers().getArray().forEach(layer => {
             console.log(layer.get('title'))
             const layerId = layer.get('title');
@@ -579,23 +587,62 @@ document.addEventListener('DOMContentLoaded', function() {
                 layer.setVisible(false);
             }
         });
+        // const mapLayers = map.getLayers().getArray();
+        // let curLayers = [];
+        // let prevLayers = [];
+
+        // if (currentYear === 2018) {
+        //     curLayers = [mapLayers[mapLayers.length - 1], mapLayers[mapLayers.length - 2]];
+            
+        // }
+
+        // curLayers.forEach(layer => {
+        //     layer.setVisible(true);
+        //     layer.setOpacity(0);
+        //     layer.setOpacity(1, 500);
+        //     // this.fadeLayer(layer, 0, 1, 500); // 500ms fade in
+        // });
+        // Hide all layers except base layer
         
         // Show current year layers
         map.getLayers().getArray().forEach(layer => {
             const layerId = layer.get('title');
             if (layerId && layerId.includes(currentYear)) {
                 layer.setVisible(true);
+                if (layerId.includes('Bus')) {
+                    layer.setVisible(document.getElementById('busToggle').checked);
+                } 
+                if (layerId.includes('Rail')|| layerId.includes('20182021RailData') ) {
+                    layer.setVisible(document.getElementById('railToggle').checked);
+                }
             }
         });
         
-        if (2021 - currentYear > 0 && 2021 - currentYear < 3) {
+        if (2021 - currentYear > 0 && 2021 - currentYear < 3 && document.getElementById('railToggle').checked) {
             map.getLayers().getArray()[map.getLayers().getArray().length -1].setVisible(true);
-        }
 
+        }
+        
         console.log('Showing year:', currentYear);
         
         },
-        
+        // fadeLayer: function(layer, start, end, duration) {
+        //     const startTime = performance.now();
+            
+        //     const animate = (currentTime) => {
+        //         const elapsed = currentTime - startTime;
+        //         const progress = Math.min(elapsed / duration, 1);
+                
+        //         const opacity = start + (end - start) * progress;
+        //         layer.setOpacity(opacity);
+                
+        //         if (progress < 1) {
+        //             requestAnimationFrame(animate);
+        //         }
+        //     };
+            
+        //     requestAnimationFrame(animate);
+        // },
         getCurrentYear: function() {
             return this.years[this.currentYearIndex];
         },
